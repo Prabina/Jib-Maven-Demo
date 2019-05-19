@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jibdemo
+  labels:
+    app: jibdemo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: jibdemo
+  template:
+    metadata:
+      labels:
+        app: jibdemo
+    spec:
+      containers:
+        - name: jibdemo
+          image: prabina/hello_jib
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+              name: jibdemo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jibservice
+spec:
+  selector:
+    app: jibdemo
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    nodePort: 31000
+    port: 8080
+    targetPort: jibdemo
